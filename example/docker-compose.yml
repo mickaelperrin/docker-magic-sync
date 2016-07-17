@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  app:
+    image: alpine:latest
+    command: /bin/true
+    volumes:
+    - /src
+  php:
+    build: ./fpm
+    volumes_from:
+    - app

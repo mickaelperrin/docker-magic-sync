@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  magic-sync:
+    image: mickaelperrin/docker-unison-fswatch:latest
+    environment:
+    - SYNC_USER=www-data
+    - SYNC_UID=33
+    volumes:
+    - ./src:/src.magic
+    - /var/run/docker.sock:/tmp/docker.sock:ro
+    volumes_from:
+    - app
