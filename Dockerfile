@@ -40,10 +40,12 @@ COPY entrypoint.sh /entrypoint.sh
 COPY supervisord.conf /etc/supervisord.conf
 COPY supervisor.fswatch.tpl.conf /supervisor.fswatch.tpl.conf
 COPY supervisor.unison.tpl.conf /supervisor.unison.tpl.conf
+COPY sync.sh /sync.sh
 
 RUN mkdir -p /docker-entrypoint.d \
  && chmod +x /entrypoint.sh \
- && mkdir -p /etc/supervisor/conf.d
+ && mkdir -p /etc/supervisor/conf.d \
+ && chmod +x /sync.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord"]
