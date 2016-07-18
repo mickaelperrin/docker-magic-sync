@@ -14,6 +14,7 @@ class Config:
     config = {'volumes': {}}
     supervisor_conf_folder = '/etc/supervisor.conf.d/'
     unison_template_path = './supervisor.unison.tpl.conf'
+    unison_defaults = '-auto -batch -owner -numericids -repeat watch'
 
     def read_yaml(self, config_file):
         """
@@ -106,6 +107,10 @@ class Config:
                     self.config['volumes'][volume]['uid'] = os.environ['SYNC_UID']
                 if 'ignore' not in conf and os.environ['SYNC_IGNORE']:
                     self.config['volumes'][volume]['ignore'] = os.environ['SYNC_IGNORE']
+                if 'unison_defaults' not in conf and os.environ['SYNC_UNISON_DEFAULTS']:
+                    self.config['volumes'][volume]['unison_defaults'] = os.environ['SYNC_UNISON_DEFAULTS']
+                elif 'unison_defaults' not in conf:
+                    self.config['volumes'][volume]['unison_defaults'] = self.unison_defaults
                 self.create_user(user, uid)
                 self.set_permissions(user, volume)
 
