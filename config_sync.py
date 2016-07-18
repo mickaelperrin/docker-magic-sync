@@ -93,7 +93,7 @@ class Config:
                 if 'user' in conf:
                     user = conf['user']
                     self.config['volumes'][volume]['homedir'] = '/home/' + conf['user']
-                elif os.environ['SYNC_USER']:
+                elif 'SYNC_USER' in os.environ:
                     user = os.environ['SYNC_USER']
                     self.config['volumes'][volume]['user'] = os.environ['SYNC_USER']
                     self.config['volumes'][volume]['homedir'] = '/home/' + os.environ['SYNC_USER']
@@ -102,12 +102,12 @@ class Config:
                     self.config['volumes'][volume]['homedir'] = '/root'
                 if 'uid' in conf:
                     uid = conf['uid']
-                elif os.environ['SYNC_UID']:
+                elif 'SYNC_UID' in os.environ:
                     uid = os.environ['SYNC_UID']
                     self.config['volumes'][volume]['uid'] = os.environ['SYNC_UID']
-                if 'ignore' not in conf and os.environ['SYNC_IGNORE']:
+                if 'ignore' not in conf and 'SYNC_IGNORE' in os.environ:
                     self.config['volumes'][volume]['ignore'] = os.environ['SYNC_IGNORE']
-                if 'unison_defaults' not in conf and os.environ['SYNC_UNISON_DEFAULTS']:
+                if 'unison_defaults' not in conf and 'SYNC_UNISON_DEFAULTS' in os.environ:
                     self.config['volumes'][volume]['unison_defaults'] = os.environ['SYNC_UNISON_DEFAULTS']
                 elif 'unison_defaults' not in conf:
                     self.config['volumes'][volume]['unison_defaults'] = self.unison_defaults
