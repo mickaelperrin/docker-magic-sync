@@ -3,6 +3,8 @@ set -e
 
 if [ "$1" == 'supervisord' ]; then
 
+    echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
+
     docker-gen -endpoint unix:///tmp/docker.sock /mounts.tmpl > /mounts.yml
 
     /config_sync.py "$SYNC_CONFIG_FILE"
