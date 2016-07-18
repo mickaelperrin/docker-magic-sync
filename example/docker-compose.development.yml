@@ -2,12 +2,12 @@ version: '2'
 
 services:
   magic-sync:
-    privileged: true
     image: mickaelperrin/docker-unison-fswatch:latest
     environment:
     - SYNC_USER=www-data
     - SYNC_UID=33
     - SYNC_IGNORE=" -ignore 'Path */.idea/' -ignore 'Path */.git/' "
+    #- MAXIMUM_INOTIFY_WATCHES=524288
     volumes:
     - ./src:/src.magic
     - /var/run/docker.sock:/tmp/docker.sock:ro
@@ -15,3 +15,6 @@ services:
     # - ./docker-syncs.yml:/sync-entrypoint.d/docker-syncs.yml
     volumes_from:
     - app
+    # Privilegied mode is needed if you want to increase the maximum inotify watches for very large synced folders
+    # by setting the ENV var MAXIMUM_INOTIFY_WATCHES.
+    #privileged: true
