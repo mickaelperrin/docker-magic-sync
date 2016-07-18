@@ -2,6 +2,7 @@ version: '2'
 
 services:
   magic-sync:
+    privileged: true
     image: mickaelperrin/docker-unison-fswatch:latest
     environment:
     - SYNC_USER=www-data

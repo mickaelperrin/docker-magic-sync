@@ -47,5 +47,7 @@ RUN mkdir -p /docker-entrypoint.d \
  && mkdir -p /etc/supervisor/conf.d \
  && chmod +x /sync.sh
 
+RUN apk add sudo
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord"]
