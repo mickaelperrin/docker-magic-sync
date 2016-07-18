@@ -1,3 +1,6 @@
+# This config file is optionnal and may be used to configure uid, user and ignore on a per volumes to sync.
+# For settings that you want to apply globally on all volumes, you can use simple ENV variables
+# (see docker-compose.development.yml file)
 volumes:
   /src:
     user: 'www-data'
