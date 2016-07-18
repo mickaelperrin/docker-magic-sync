@@ -14,7 +14,6 @@ class Config:
     config = {'volumes': {}}
     supervisor_conf_folder = '/etc/supervisor/conf.d/'
     unison_template_path = './supervisor.unison.tpl.conf'
-    fswatch_template_path = './supervisor.fswatch.tpl.conf'
 
     def read_yaml(self, config_file):
         with open(config_file, 'r') as stream:
@@ -42,23 +41,18 @@ class Config:
             for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
                 conf.update({'port': 5000 + int(i)})
                 self.write_supervisor_conf_unison(conf)
-                #self.write_supervisor_conf_fswatch(conf, False)
-                #self.write_supervisor_conf_fswatch(conf, True)
 
     def create_user(self, user, uid):
         if uid:
-            print("Uid is set to " + str(uid))
             uid_str = " -u " + str(uid) + " "
             # if uid doesn't exist on the system
             if int(uid) not in [x[2] for x in pwd.getpwall()]:
                 # if user doesn't exist on the system
                 if user not in [y[0] for y in pwd.getpwall()]:
                     cmd="useradd " + user + uid_str + " -m"
-                    print(cmd)
                     os.system(cmd)
                 else:
                     cmd="usermod " + uid_str + user
-                    print(cmd)
                     os.system(cmd)
             else:
                 # get username with uid
@@ -66,12 +60,10 @@ class Config:
                     if existing_user[2] == int(uid):
                         user_name = existing_user[0]
                 cmd="mkdir -p /home/" + user + " && usermod --home /home/" + user + " --login " + user + " " + str(user_name) + " && chown -R " + user + " /home/" + user
-                print(cmd)
                 os.system(cmd)
         else:
             if user not in [x[0] for x in pwd.getpwall()]:
                 cmd="useradd " + user + " -m"
-                print(cmd)
                 os.system(cmd)
             else:
                 print("user already exists")
@@ -107,11 +99,9 @@ class Config:
     def merge_discovered_mounts(self):
         mounts = self.read_yaml('/mounts.yml')
         for mount in mounts['mounts']:
-            print(mount)
             if '.magic' in mount:
                 if not self.config or mount not in self.config['volumes']:
                     self.config['volumes'][mount.replace('.magic', '')] = {}
-                    print(self.config)
 
     def initial_sync(self):
         if 'volumes' in self.config:
