@@ -1,4 +1,4 @@
-syncs:
+volumes:
   /src:
     user: 'www-data'
     uid: 33
