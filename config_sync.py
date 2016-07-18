@@ -11,7 +11,7 @@ import re
 
 class Config:
 
-    config = {'syncs': {}}
+    config = {'volumes': {}}
     supervisor_conf_folder = '/etc/supervisor/conf.d/'
     unison_template_path = './supervisor.unison.tpl.conf'
     fswatch_template_path = './supervisor.fswatch.tpl.conf'
@@ -38,8 +38,8 @@ class Config:
             f.write(Template(template.read()).substitute(conf))
 
     def write_supervisor_conf(self):
-        if 'syncs' in self.config:
-            for i, (volume, conf) in enumerate(self.config['syncs'].iteritems(), 1):
+        if 'volumes' in self.config:
+            for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
                 conf.update({'port': 5000 + int(i)})
                 self.write_supervisor_conf_unison(conf)
                 #self.write_supervisor_conf_fswatch(conf, False)
@@ -82,25 +82,25 @@ class Config:
             os.system("chown -R " + user + " " + folder + ".magic")
 
     def set_defaults(self):
-        if 'syncs' in self.config:
-            for i, (volume, conf) in enumerate(self.config['syncs'].iteritems(), 1):
-                self.config['syncs'][volume]['volume'] = volume
-                self.config['syncs'][volume]['name'] = re.sub(r'\/', '-', volume)
+        if 'volumes' in self.config:
+            for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
+                self.config['volumes'][volume]['volume'] = volume
+                self.config['volumes'][volume]['name'] = re.sub(r'\/', '-', volume)
                 if 'user' in conf:
                     user = conf['user']
-                    self.config['syncs'][volume]['homedir'] = '/home/' + conf['user']
+                    self.config['volumes'][volume]['homedir'] = '/home/' + conf['user']
                 elif os.environ['SYNC_USER']:
                     user = os.environ['SYNC_USER']
-                    self.config['syncs'][volume]['user'] = os.environ['SYNC_USER']
-                    self.config['syncs'][volume]['homedir'] = '/home/' + os.environ['SYNC_USER']
+                    self.config['volumes'][volume]['user'] = os.environ['SYNC_USER']
+                    self.config['volumes'][volume]['homedir'] = '/home/' + os.environ['SYNC_USER']
                 else:
-                    self.config['syncs'][volume]['user'] = 'root'
-                    self.config['syncs'][volume]['homedir'] = '/root'
+                    self.config['volumes'][volume]['user'] = 'root'
+                    self.config['volumes'][volume]['homedir'] = '/root'
                 if 'uid' in conf:
                     uid = conf['uid']
                 elif os.environ['SYNC_UID']:
                     uid = os.environ['SYNC_UID']
-                    self.config['syncs'][volume]['uid'] = os.environ['SYNC_UID']
+                    self.config['volumes'][volume]['uid'] = os.environ['SYNC_UID']
                 self.create_user(user, uid)
                 self.set_permissions(user, volume)
 
@@ -109,13 +109,13 @@ class Config:
         for mount in mounts['mounts']:
             print(mount)
             if '.magic' in mount:
-                if not self.config or mount not in self.config['syncs']:
-                    self.config['syncs'][mount.replace('.magic', '')] = {}
+                if not self.config or mount not in self.config['volumes']:
+                    self.config['volumes'][mount.replace('.magic', '')] = {}
                     print(self.config)
 
     def initial_sync(self):
-        if 'syncs' in self.config:
-            for volume, conf in self.config['syncs'].iteritems():
+        if 'volumes' in self.config:
+            for volume, conf in self.config['volumes'].iteritems():
                 os.system('cp -ar ' + volume + '.magic/. ' + volume)
 
     def set(self, config_file):
