@@ -36,7 +36,7 @@ COPY mounts.tmpl /mounts.tmpl
 COPY config_sync.py /config_sync.py
 COPY entrypoint.sh /entrypoint.sh
 COPY supervisord.conf /etc/supervisord.conf
-COPY supervisor.unison.tpl.conf /supervisor.unison.tpl.conf
+COPY supervisor.unison.tpl.conf /etc/supervisor.unison.tpl.conf
 
 RUN mkdir -p /docker-entrypoint.d \
  && chmod +x /entrypoint.sh \

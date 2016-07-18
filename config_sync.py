@@ -12,7 +12,7 @@ import re
 class Config:
 
     config = {'volumes': {}}
-    supervisor_conf_folder = '/etc/supervisor/conf.d/'
+    supervisor_conf_folder = '/etc/supervisor.conf.d/'
     unison_template_path = './supervisor.unison.tpl.conf'
 
     def read_yaml(self, config_file):
