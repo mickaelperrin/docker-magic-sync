@@ -2,7 +2,7 @@ version: '2'
 
 services:
   magic-sync:
-    image: mickaelperrin/docker-unison-fswatch:latest
+    image: mickaelperrin/docker-magic-sync:latest
     environment:
     - SYNC_USER=www-data
     - SYNC_UID=33
