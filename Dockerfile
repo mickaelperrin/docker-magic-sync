@@ -48,6 +48,7 @@ RUN mkdir -p /docker-entrypoint.d \
  && chmod +x /sync.sh
 
 RUN apk add sudo
+RUN apk add --update inotify-tools
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord"]
