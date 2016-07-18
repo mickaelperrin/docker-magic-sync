@@ -113,12 +113,18 @@ class Config:
                     self.config['syncs'][mount.replace('.magic', '')] = {}
                     print(self.config)
 
+    def initial_sync(self):
+        if 'syncs' in self.config:
+            for volume, conf in self.config['syncs'].iteritems():
+                os.system('cp -ar ' + volume + '.magic/. ' + volume)
+
     def set(self, config_file):
         if config_file:
             self.config = self.read_yaml(config_file)
         self.merge_discovered_mounts()
         self.set_defaults()
         self.write_supervisor_conf()
+        self.initial_sync()
 
 c = Config()
 c.set(sys.argv[1])
