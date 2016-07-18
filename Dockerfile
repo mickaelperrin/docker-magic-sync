@@ -45,7 +45,7 @@ RUN apk add --update supervisor
 COPY entrypoint.sh /entrypoint.sh
 RUN mkdir -p /sync-entrypoint.d \
  && chmod +x /entrypoint.sh \
- && mkdir -p /etc/supervisor/conf.d
+ && mkdir -p /etc/supervisor.conf.d
 
 COPY mounts.tmpl /mounts.tmpl
 COPY config_sync.py /config_sync.py
