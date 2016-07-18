@@ -3,13 +3,19 @@ set -e
 
 if [ "$1" == 'supervisord' ]; then
 
+    # Increase the maximum watches for inotify for very large repositories to be watched
+    # Needs the privilegied docker option
     echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
 
+    # Generate a simple yaml file with all volumes of the current container
+    # Used to find the magic volumes
     docker-gen -endpoint unix:///tmp/docker.sock /mounts.tmpl > /mounts.yml
 
+    # Generate the sync configuration
     /config_sync.py "$SYNC_CONFIG_FILE"
 
-    # Check if a script is available in /lsyncd-entrypoint.d and source it
+    # Check if a SH script is available in /sync-entrypoint.d and source it
+    # check if a YML configuration file is available in /sync-entrypoint.d and load it
     for f in /sync-entrypoint.d/*; do
         case "$f" in
             *.sh) echo "$0: running $f"; . "$f" ;;
