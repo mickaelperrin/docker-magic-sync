@@ -7,6 +7,7 @@ services:
     environment:
     - SYNC_USER=www-data
     - SYNC_UID=33
+    - SYNC_IGNORE=" -ignore 'Path */.idea/' -ignore 'Path */.git/' "
     volumes:
     - ./src:/src.magic
     - /var/run/docker.sock:/tmp/docker.sock:ro

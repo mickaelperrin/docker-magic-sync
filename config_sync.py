@@ -104,6 +104,8 @@ class Config:
                 elif os.environ['SYNC_UID']:
                     uid = os.environ['SYNC_UID']
                     self.config['volumes'][volume]['uid'] = os.environ['SYNC_UID']
+                if 'ignore' not in conf and os.environ['SYNC_IGNORE']:
+                    self.config['volumes'][volume]['ignore'] = os.environ['SYNC_IGNORE']
                 self.create_user(user, uid)
                 self.set_permissions(user, volume)
 
