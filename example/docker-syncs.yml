@@ -5,4 +5,4 @@ volumes:
   /src:
     user: 'www-data'
     uid: 33
-    ignore: " -ignore 'Path */.idea/' -ignore 'Path */.git/' "
+    ignore: -ignore 'Path */.idea/' -ignore 'Path */.git/'
