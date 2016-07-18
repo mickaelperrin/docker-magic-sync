@@ -42,8 +42,8 @@ class Config:
             for i, (volume, conf) in enumerate(self.config['syncs'].iteritems(), 1):
                 conf.update({'port': 5000 + int(i)})
                 self.write_supervisor_conf_unison(conf)
-                self.write_supervisor_conf_fswatch(conf, False)
-                self.write_supervisor_conf_fswatch(conf, True)
+                #self.write_supervisor_conf_fswatch(conf, False)
+                #self.write_supervisor_conf_fswatch(conf, True)
 
     def create_user(self, user, uid):
         if uid:
