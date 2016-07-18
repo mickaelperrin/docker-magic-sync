@@ -11,5 +11,7 @@ services:
     volumes:
     - ./src:/src.magic
     - /var/run/docker.sock:/tmp/docker.sock:ro
+    # If you want to configure USER / UID / IGNORE by volumes, you can use a simple YAML configuration file
+    # - ./docker-syncs.yml:/sync-entrypoint.d/docker-syncs.yml
     volumes_from:
     - app
