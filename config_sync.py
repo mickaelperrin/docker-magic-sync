@@ -25,20 +25,6 @@ class Config:
             except yaml.YAMLError as exc:
                 print(exc)
 
-    def write_supervisor_conf_unison(self, conf):
-        template = open(self.unison_template_path)
-        with open(self.supervisor_conf_folder + 'unison' + conf['name'] + '.conf', 'w') as f:
-            f.write(Template(template.read()).substitute(conf))
-
-    def write_supervisor_conf_fswatch(self, conf, reverse):
-        template = open(self.fswatch_template_path)
-        reverse_str = '-reverse' if reverse else ''
-        volume_watch = conf['volume'] if reverse else conf['volume'] + '.magic'
-        conf.update({'volume_watch': volume_watch, 'reverse': reverse_str})
-        supervisor_conf = self.supervisor_conf_folder + 'fswatch' + conf['name'] + reverse_str + '.conf'
-        with open(supervisor_conf, 'w') as f:
-            f.write(Template(template.read()).substitute(conf))
-
     def write_supervisor_conf(self):
         """
         Generates supervisor configuration for unison
@@ -46,7 +32,9 @@ class Config:
         if 'volumes' in self.config:
             for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
                 conf.update({'port': 5000 + int(i)})
-                self.write_supervisor_conf_unison(conf)
+                template = open(self.unison_template_path)
+                with open(self.supervisor_conf_folder + 'unison' + conf['name'] + '.conf', 'w') as f:
+                    f.write(Template(template.read()).substitute(conf))
 
     def create_user(self, user, uid):
         """
