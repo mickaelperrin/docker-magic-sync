@@ -12,7 +12,7 @@ services:
     volumes:
     # Configure here the mappings between your host and the container.
     # Simply add a `.magic` extension to the volume path in the container.
-    - ./src:/src.magic
+    - ..:/src.magic
     # this is needed for automatic discovery of mounted volumes in this container.
     - /var/run/docker.sock:/tmp/docker.sock:ro
     # If you want to configure USER / UID / IGNORE by volumes, you can use a simple YAML configuration file

@@ -28,7 +28,7 @@ A full example is provided in the [example folder](https://github.com/mickaelper
 
 Then, spawn in a new shell:
 
-    docker exec -it example_php_1 bash -c 'composer --working-dir=/src/project/src install'
+    docker exec -it example_php_1 bash -c 'composer --working-dir=/src/example/src install'
 
 ### Generic example
 
