@@ -107,6 +107,8 @@ class Config:
                     self.config['volumes'][volume]['uid'] = os.environ['SYNC_UID']
                 if 'ignore' not in conf and 'SYNC_IGNORE' in os.environ:
                     self.config['volumes'][volume]['ignore'] = os.environ['SYNC_IGNORE']
+                elif 'ignore' not in conf:
+                    self.config['volumes'][volume]['ignore'] = ''
                 if 'unison_defaults' not in conf and 'SYNC_UNISON_DEFAULTS' in os.environ:
                     self.config['volumes'][volume]['unison_defaults'] = os.environ['SYNC_UNISON_DEFAULTS']
                 elif 'unison_defaults' not in conf:
