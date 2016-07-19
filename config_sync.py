@@ -74,7 +74,6 @@ class Config:
         """
         if user != 'root':
             os.system("chown " + user + " " + folder)
-            os.system("chown -R " + user + " " + folder + ".magic")
 
     def generate_ignore_string(self, ignores, sync_method='unison'):
         """
