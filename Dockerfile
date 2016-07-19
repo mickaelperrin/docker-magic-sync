@@ -1,8 +1,21 @@
 FROM alpine:latest
 MAINTAINER Mickaël Perrin <dev@mickaelperrin.fr>
 
+# Install shadow to manage users
+RUN apk add --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ shadow
+
+# Install supervisor
+RUN apk add --update supervisor
+
+# Install pyyaml package
+RUN apk add --update curl && \
+    curl -L http://pyyaml.org/download/pyyaml/PyYAML-3.11.tar.gz | tar zxv -C /tmp && \
+    cd /tmp/PyYAML-3.11 && \
+    python setup.py --without-libyaml install && \
+    apk del curl  && \
+    rm -rf /var/cache/apk/*
+
 ARG UNISON_VERSION=2.48.4
-ENV DOCKERGEN_VERSION=0.7.3
 
 # Compile unison from source with inotify support and removes compilation tools
 RUN apk add --update build-base curl bash inotify-tools && \
@@ -16,26 +29,13 @@ RUN apk add --update build-base curl bash inotify-tools && \
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/unison-${UNISON_VERSION}
 
-# Install supervisor
-RUN apk add --update supervisor
-
-# Install pyyaml package
-RUN apk add --update curl && \
-    curl -L http://pyyaml.org/download/pyyaml/PyYAML-3.11.tar.gz | tar zxv -C /tmp && \
-    cd /tmp/PyYAML-3.11 && \
-    python setup.py --without-libyaml install && \
-    apk del curl  && \
-    rm -rf /var/cache/apk/*
+ENV DOCKERGEN_VERSION=0.7.3
 
 # Install docker-gen (to grab docker config on start)
 RUN apk add --update curl && \
     curl -L https://github.com/jwilder/docker-gen/releases/download/$DOCKERGEN_VERSION/docker-gen-linux-amd64-$DOCKERGEN_VERSION.tar.gz | tar -C /usr/local/bin -xzv && \
     apk del curl && \
     rm -rf /var/cache/apk/*
-
-# Install shadow to manage users
-RUN apk add --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ shadow
-
 
 # Install entrypoint script
 COPY entrypoint.sh /entrypoint.sh
