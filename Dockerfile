@@ -16,17 +16,15 @@ RUN apk add --update build-base curl bash inotify-tools && \
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/unison-${UNISON_VERSION}
 
-# Install pip and pyyaml package using ez_setup script
-RUN apk add --update build-base python py-pip curl && \
-    apk add --update ca-certificates wget sudo && update-ca-certificates && wget -O cacert.pem https://curl.haxx.se/ca/cacert.pem && \
-    curl --insecure https://bootstrap.pypa.io/ez_setup.py -o /tmp/ez_setup.py && \
-    mv cacert.pem ca-bundle.crt && \
-    mkdir -p /etc/pki/tls/certs && \
-    sudo mv ca-bundle.crt /etc/pki/tls/certs && \
-    python /tmp/ez_setup.py && \
-    pip install pyyaml && \
-    rm /tmp/ez_setup.py && \
-    apk del curl && \
+# Install supervisor
+RUN apk add --update supervisor
+
+# Install pyyaml package
+RUN apk add --update curl && \
+    curl -L http://pyyaml.org/download/pyyaml/PyYAML-3.11.tar.gz | tar zxv -C /tmp && \
+    cd /tmp/PyYAML-3.11 && \
+    python setup.py --without-libyaml install && \
+    apk del curl  && \
     rm -rf /var/cache/apk/*
 
 # Install docker-gen (to grab docker config on start)
@@ -38,8 +36,6 @@ RUN apk add --update curl && \
 # Install shadow to manage users
 RUN apk add --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ shadow
 
-# Install supervisor
-RUN apk add --update supervisor
 
 # Install entrypoint script
 COPY entrypoint.sh /entrypoint.sh
