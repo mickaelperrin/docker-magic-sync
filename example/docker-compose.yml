@@ -5,7 +5,7 @@ services:
     image: alpine:latest
     command: /bin/true
     volumes:
-    - /src
+    - /src/project
   php:
     build: ./fpm
     volumes_from:

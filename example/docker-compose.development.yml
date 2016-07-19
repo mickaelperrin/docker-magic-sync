@@ -5,14 +5,14 @@ services:
     image: mickaelperrin/docker-magic-sync:latest
     build: ../
     environment:
-    - SYNC_USER=www-data
-    - SYNC_UID=33
-    - SYNC_IGNORE=.idea:.git
-    #- MAXIMUM_INOTIFY_WATCHES=524288
+    - SYNC_USER=bpinto
+    - SYNC_UID=501
+    - SYNC_IGNORE=.idea
+    - MAXIMUM_INOTIFY_WATCHES=524288
     volumes:
     # Configure here the mappings between your host and the container.
     # Simply add a `.magic` extension to the volume path in the container.
-    - ./src:/src.magic
+    - .:/src/project.magic
     # this is needed for automatic discovery of mounted volumes in this container.
     - /var/run/docker.sock:/tmp/docker.sock:ro
     # If you want to configure USER / UID / IGNORE by volumes, you can use a simple YAML configuration file
