@@ -76,6 +76,21 @@ class Config:
             os.system("chown " + user + " " + folder)
             os.system("chown -R " + user + " " + folder + ".magic")
 
+    def generate_ignore_string(self, ignores, sync_method='unison'):
+        """
+        Generates an ignore string depending on the type of sync command, currently supports:
+        - unison
+        - tar
+        """
+        if type(ignores) is str:
+            ignores = ignores.split(':')
+        if sync_method == 'unison':
+            separator = "' -ignore 'Path "
+            return separator[1:] + separator.join(ignores)  + "' "
+        elif sync_method == 'tar':
+            separator = " --exclude "
+            return separator + separator.join(ignores) + ' '
+
     def set_defaults(self):
         """
         Set values for configured volumes to sync:
@@ -105,10 +120,14 @@ class Config:
                 elif 'SYNC_UID' in os.environ:
                     uid = os.environ['SYNC_UID']
                     self.config['volumes'][volume]['uid'] = os.environ['SYNC_UID']
-                if 'ignore' not in conf and 'SYNC_IGNORE' in os.environ:
+                if 'ignore' in conf:
+                    self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(conf['ignore'], 'unison')
+                elif 'SYNC_IGNORE' in os.environ:
                     self.config['volumes'][volume]['ignore'] = os.environ['SYNC_IGNORE']
-                elif 'ignore' not in conf:
+                    self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(os.environ['SYNC_IGNORE'], 'unison')
+                else:
                     self.config['volumes'][volume]['ignore'] = ''
+                    self.config['volumes'][volume]['unison_ignore'] = ''
                 if 'unison_defaults' not in conf and 'SYNC_UNISON_DEFAULTS' in os.environ:
                     self.config['volumes'][volume]['unison_defaults'] = os.environ['SYNC_UNISON_DEFAULTS']
                 elif 'unison_defaults' not in conf:
@@ -133,7 +152,7 @@ class Config:
         """
         if 'volumes' in self.config:
             for volume, conf in self.config['volumes'].iteritems():
-                os.system('cp -ar ' + volume + '.magic/. ' + volume)
+                os.system('tar -c -C ' + volume + '.magic ' + self.generate_ignore_string(conf['ignore'], 'tar') + ' . | tar -xC ' + volume)
 
     def set(self, config_file):
         if config_file:
