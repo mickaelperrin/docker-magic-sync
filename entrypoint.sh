@@ -5,7 +5,7 @@ if [ "$1" == 'supervisord' ]; then
 
     # Increase the maximum watches for inotify for very large repositories to be watched
     # Needs the privilegied docker option
-    [ ! -z $MAXIMUM_INOTIFY_WATCHESS ] && echo fs.inotify.max_user_watches=$MAXIMUM_INOTIFY_WATCHES | tee -a /etc/sysctl.conf && sysctl -p || true
+    [ ! -z $MAXIMUM_INOTIFY_WATCHES ] && echo fs.inotify.max_user_watches=$MAXIMUM_INOTIFY_WATCHES | tee -a /etc/sysctl.conf && sysctl -p || true
 
     # Generate a simple yaml file with all volumes of the current container
     # Used to find the magic volumes
