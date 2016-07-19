@@ -44,7 +44,7 @@ The `magic-sync` container maps the local folder `./src` to the folder `/src.mag
         environment:
         - SYNC_USER=www-data
         - SYNC_UID=33
-        - SYNC_IGNORE=" -ignore 'Path */.idea/' -ignore 'Path */.git/' "
+        - SYNC_IGNORE=-ignore 'Path */.idea/' -ignore 'Path */.git/'
         #- MAXIMUM_INOTIFY_WATCHES=524288
         volumes:
         # Configure here the mappings between your host and the container.
