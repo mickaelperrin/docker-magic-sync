@@ -1,6 +1,10 @@
 Magic sync for docker
 =====================
 
+> WARNING
+> This is currently a proof of concept.
+> An issue with OSXFS prevents `inotify events` to get triggered in a mounted volume if the number of files is high.
+
 ## Description
 
 Magic sync for docker is a simple tool that watches local directory trees and syncs in real time the modification in a
