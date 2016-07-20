@@ -86,7 +86,7 @@ class Config:
             ignores = ignores.split(':')
         if sync_method == 'unison':
             separator = "' -ignore 'Path "
-            return separator[1:] + separator.join(ignores)  + "' "
+            return separator[1:] + separator.join(ignores) + "' "
         elif sync_method == 'tar':
             separator = " --exclude "
             return separator + separator.join(ignores) + ' '
