@@ -14,7 +14,7 @@ class Config:
     config = {'volumes': {}}
     supervisor_conf_folder = '/etc/supervisor.conf.d/'
     unison_template_path = '/etc/supervisor.unison.tpl.conf'
-    unison_defaults = '-auto -batch -owner -numericids -repeat watch'
+    unison_defaults = '-auto -batch -repeat watch'
 
     def read_yaml(self, config_file):
         """
@@ -68,12 +68,13 @@ class Config:
             else:
                 print("user already exists")
 
-    def set_permissions(self, user, folder):
+    def set_permissions(self, user, folder, recursive=False):
         """
         Set permissions to the folder
         """
+        args = ' -R ' if recursive else ''
         if user != 'root':
-            os.system("chown " + user + " " + folder)
+            os.system("chown " + args + user + " " + folder)
 
     def generate_ignore_string(self, ignores, sync_method='unison'):
         """
@@ -152,6 +153,7 @@ class Config:
         if 'volumes' in self.config:
             for volume, conf in self.config['volumes'].iteritems():
                 os.system('tar -c -C ' + volume + '.magic ' + self.generate_ignore_string(conf['ignore'], 'tar') + ' . | tar -xC ' + volume)
+                self.set_permissions(conf['user'], volume, True)
 
     def set(self, config_file):
         if config_file:
