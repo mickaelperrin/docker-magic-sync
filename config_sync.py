@@ -135,16 +135,16 @@ class Config:
                 self.create_user(user, uid)
                 self.set_permissions(user, volume)
 
-    def merge_discovered_mounts(self):
+    def merge_discovered_volumes(self):
         """ 
         Read config file auto generated on container start by docker-gen.
         Merges the `magic` folders with the ones configured in the provided config file, if any.
         """
-        mounts = self.read_yaml('/mounts.yml')
-        for mount in mounts['mounts']:
-            if '.magic' in mount:
-                if not self.config or mount not in self.config['volumes']:
-                    self.config['volumes'][mount.replace('.magic', '')] = {}
+        volumes = self.read_yaml('/volumes.yml')
+        for volume in volumes['volumes']:
+            if '.magic' in volume:
+                if not self.config or volume not in self.config['volumes']:
+                    self.config['volumes'][volume.replace('.magic', '')] = {}
 
     def initial_sync(self):
         """ 
@@ -158,7 +158,7 @@ class Config:
     def set(self, config_file):
         if config_file:
             self.config = self.read_yaml(config_file)
-        self.merge_discovered_mounts()
+        self.merge_discovered_volumes()
         self.set_defaults()
         self.write_supervisor_conf()
         self.initial_sync()

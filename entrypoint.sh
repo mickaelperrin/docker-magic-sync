@@ -9,7 +9,7 @@ if [ "$1" == 'supervisord' ]; then
 
     # Generate a simple yaml file with all volumes of the current container
     # Used to find the magic volumes
-    docker-gen -endpoint unix:///tmp/docker.sock /mounts.tmpl > /mounts.yml
+    docker-gen -endpoint unix:///tmp/docker.sock /volumes.tmpl > /volumes.yml
 
     # Generate the sync configuration
     /config_sync.py "$SYNC_CONFIG_FILE"

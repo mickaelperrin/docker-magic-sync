@@ -1,5 +1,5 @@
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
-mounts:
+volumes:
 {{ range $mount := $CurrentContainer.Mounts }}
   - {{ $mount.Destination }}
 {{ end }}
