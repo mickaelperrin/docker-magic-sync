@@ -17,7 +17,8 @@ RUN apk add --no-cache bash
 ARG UNISON_VERSION=2.48.4
 
 # Compile unison from source with inotify support and removes compilation tools
-RUN apk add --no-cache --virtual .build-dependencies build-base curl inotify-tools && \
+RUN apk add --no-cache --virtual .build-dependencies build-base curl && \
+    apk add --no-cache inotify-tools && \
     apk add --no-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ ocaml && \
     curl -L https://github.com/bcpierce00/unison/archive/$UNISON_VERSION.tar.gz | tar zxv -C /tmp && \
     cd /tmp/unison-${UNISON_VERSION} && \
