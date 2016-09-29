@@ -2,7 +2,7 @@ FROM alpine:latest
 MAINTAINER Mickaël Perrin <dev@mickaelperrin.fr>
 
 # Install shadow to manage users
-RUN apk add --no-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ shadow
+RUN apk add --no-cache shadow
 
 RUN apk add --no-cache supervisor
 
