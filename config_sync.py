@@ -152,7 +152,7 @@ class Config:
         """
         if 'volumes' in self.config:
             for volume, conf in self.config['volumes'].iteritems():
-                os.sytem('unison ' + volume + '.magic ' + volume + ' -auto -batch ' + self.generate_ignore_string(conf['ignore'], 'unison'))
+                os.system('unison ' + volume + '.magic ' + volume + ' -auto -batch ' + self.generate_ignore_string(conf['ignore'], 'unison'))
                 self.set_permissions(conf['user'], volume, True)
 
     def set(self, config_file):

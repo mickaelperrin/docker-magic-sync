@@ -1,6 +1,12 @@
 FROM alpine:latest
 MAINTAINER Mickaël Perrin <dev@mickaelperrin.fr>
 
+# Add edge repos
+RUN echo "http://dl-2.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+    echo "http://dl-3.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+    echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+    echo "http://dl-5.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+
 # Install shadow to manage users
 RUN apk add --no-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ shadow
 
