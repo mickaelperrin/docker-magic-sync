@@ -4,7 +4,7 @@ Magic sync for docker
 > WARNING
 > This is currently a proof of concept.
 > An issue with OSXFS prevents `inotify events` to get triggered in a mounted volume if the number of files is high. This prevents this to run as soon as the number of files to synced exceed a rather very low limit.
-> While waiting that Docker fixes the issue with OSXFS, you could check [`docker-sync`](https://github.com/EugenMayer/docker-sync) where I just published a [PR](https://github.com/EugenMayer/docker-sync/pull/64) that implements this sync strategy. Not as transparent as `docker-magic`sync` but runs so far...
+> While waiting that Docker fixes the issue with OSXFS, you could check [`docker-sync`](https://github.com/EugenMayer/docker-sync) where this concept has been succesfully deployed.
 
 ## Description
 
