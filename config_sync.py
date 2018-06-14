@@ -14,7 +14,7 @@ class Config:
     config = {'volumes': {}}
     supervisor_conf_folder = '/etc/supervisor.conf.d/'
     unison_template_path = '/etc/supervisor.unison.tpl.conf'
-    unison_defaults = '-auto -batch -repeat watch'
+    unison_defaults = '-auto -numericids -batch -maxerrors 10 -repeat watch'
 
     def read_yaml(self, config_file):
         """
