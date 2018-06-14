@@ -113,8 +113,8 @@ class Config:
                     self.config['volumes'][volume]['user'] = os.environ['SYNC_USER']
                     self.config['volumes'][volume]['homedir'] = '/home/' + os.environ['SYNC_USER']
                 else:
-                    self.config['volumes'][volume]['user'] = 'root'
-                    self.config['volumes'][volume]['homedir'] = '/root'
+                    user = self.config['volumes'][volume]['user'] = self.config['volumes'][volume]['name'][1:8]
+                    self.config['volumes'][volume]['homedir'] = '/home/' + self.config['volumes'][volume]['name'][1:8]
                 if 'uid' in conf:
                     uid = conf['uid']
                 elif 'SYNC_UID' in os.environ:
