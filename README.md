@@ -1,6 +1,11 @@
 Magic sync for docker
 =====================
 
+> UPDATE: 2018-06-14
+> Did some new tests by reverting D4M to version 17.09.1-ce-mac42 which is given to have the best inotify support.
+> Sync from container to host works. 
+> But still no files synced from host to container. 
+
 > WARNING
 > This is currently a proof of concept.
 > An issue with OSXFS prevents `inotify events` to get triggered in a mounted volume if the number of files is high. This prevents this to run as soon as the number of files to synced exceed a rather very low limit.
