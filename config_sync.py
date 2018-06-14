@@ -119,6 +119,8 @@ class Config:
                     self.config['volumes'][volume]['uid'] = uid = conf['uid']
                 elif 'SYNC_UID' in os.environ:
                     self.config['volumes'][volume]['uid'] = uid = os.environ['SYNC_UID']
+                else:
+                  raise Exception('Unable to grab uid from config file or env variable. Ensure you have set SYNC_UID ! ')
                 if 'ignore' in conf:
                     self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(conf['ignore'], 'unison')
                 elif 'SYNC_IGNORE' in os.environ:
