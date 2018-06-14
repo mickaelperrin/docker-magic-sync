@@ -5,8 +5,10 @@ services:
     image: alpine:latest
     command: /bin/true
     volumes:
-    - /src
+      - /src
   php:
     build: ./fpm
     volumes_from:
-    - app
+      - app
+    volumes:
+      - ~/.composer/cache:/composer/cache
