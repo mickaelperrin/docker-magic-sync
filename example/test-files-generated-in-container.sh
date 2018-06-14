@@ -10,7 +10,7 @@ _remove_existing_test_containers
 _build_and_start_test_containers
 
 # Wait to ensure initial sync is performed
-sleep 5
+sleep 10
 
 echo "Launch our test, by running composer in container"
 docker exec -u 33 -it magicsync_php_1 composer --working-dir=/src/example/src -vv install

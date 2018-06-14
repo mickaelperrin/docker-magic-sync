@@ -40,7 +40,8 @@ function _count_files_in_container_without_unison_tpm_files() {
 # - perform a check every 2 seconds
 function _has_new_files_in_container() {
   local files_in_container_previous=$(_count_files_in_container)
-  sleep 5
+  echo "Waiting 1 minute..."
+  sleep 60
   files_in_container=$(_count_files_in_container)
   echo "Synced $files_in_container files so far..."
   [ $files_in_container_previous -eq $files_in_container ] && return 1 || return 0
@@ -52,7 +53,8 @@ function _has_new_files_in_container() {
 # - perform a check every 2 seconds
 function _has_new_files_on_host() {
   local files_on_host_previous=$(_count_files_on_host)
-  sleep 5
+  echo "Waiting 1 minute..."
+  sleep 60
   local files_on_host=$(_count_files_on_host)
   echo "Synced $files_on_host files so far..."
   [ $files_on_host_previous -eq $files_on_host ] && return 1 || return 0
