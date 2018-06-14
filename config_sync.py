@@ -116,10 +116,9 @@ class Config:
                     user = self.config['volumes'][volume]['user'] = self.config['volumes'][volume]['name'][1:8]
                     self.config['volumes'][volume]['homedir'] = '/home/' + self.config['volumes'][volume]['name'][1:8]
                 if 'uid' in conf:
-                    uid = conf['uid']
+                    self.config['volumes'][volume]['uid'] = uid = conf['uid']
                 elif 'SYNC_UID' in os.environ:
-                    uid = os.environ['SYNC_UID']
-                    self.config['volumes'][volume]['uid'] = os.environ['SYNC_UID']
+                    self.config['volumes'][volume]['uid'] = uid = os.environ['SYNC_UID']
                 if 'ignore' in conf:
                     self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(conf['ignore'], 'unison')
                 elif 'SYNC_IGNORE' in os.environ:
