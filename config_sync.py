@@ -67,6 +67,7 @@ class Config:
                 os.system(cmd)
             else:
                 print("user already exists")
+        self.debug("CMD:" + cmd)
 
     def set_permissions(self, user, folder, recursive=False):
         """
@@ -153,8 +154,13 @@ class Config:
         """
         if 'volumes' in self.config:
             for volume, conf in self.config['volumes'].iteritems():
-                os.system('unison ' + volume + '.magic ' + volume + ' -auto -batch ' + self.generate_ignore_string(conf['ignore'], 'unison'))
+                command = 'unison ' + volume + '.magic ' + volume + ' -numericids -auto -batch ' + self.generate_ignore_string(conf['ignore'], 'unison')
+                self.debug(command)
+                os.system(command)
                 self.set_permissions(conf['user'], volume, True)
+
+    def debug(self, message):
+        print(message)
 
     def set(self, config_file):
         if config_file:
