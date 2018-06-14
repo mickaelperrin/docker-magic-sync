@@ -5,7 +5,7 @@ services:
     image: mickaelperrin/docker-magic-sync:latest
     build: ../
     environment:
-    - SYNC_USER=www-data
+#    - SYNC_USER=www-data
     - SYNC_UID=33
     - SYNC_IGNORE=.idea:.git
     #- MAXIMUM_INOTIFY_WATCHES=524288
