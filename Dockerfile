@@ -37,6 +37,11 @@ RUN apk add --no-cache curl \
  && curl -L https://github.com/jwilder/docker-gen/releases/download/$DOCKERGEN_VERSION/docker-gen-linux-amd64-$DOCKERGEN_VERSION.tar.gz | tar -C /usr/local/bin -xzv \
  && apk del curl
 
+# Install supervisord-stdout
+RUN apk add --no-cache py-pip \
+ && pip install supervisor-stdout \
+ && apk del py-pip
+
 # Install entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN mkdir -p /sync-entrypoint.d \
