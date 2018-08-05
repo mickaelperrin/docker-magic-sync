@@ -1,6 +1,9 @@
 Magic sync for docker
 =====================
 
+> UPDATE: 2018-08-05
+> The test case seems to be a crash test. Sync performs well but crashes under heavy file generation. Currently, I have hooked composer related commands to stop / start the 
+> unison process in the container.
 > UPDATE: 2018-06-14
 > Did some new tests by reverting D4M to version 17.09.1-ce-mac42 which is given to have the best inotify support.
 > Sync from container to host works. 
@@ -74,12 +77,14 @@ The `magic-sync` container maps the local folder `./src` to the folder `/src.mag
         environment:
         - SYNC_USER=www-data
         - SYNC_UID=33
-        - SYNC_IGNORE=.idea:.git
+        - SYNC_IGNORE_NAMES=.idea:.git
+        - SYNC_IGNORE_PATHS=www/example:www2/example2
         #- MAXIMUM_INOTIFY_WATCHES=524288
         volumes:
         # Configure here the mappings between your host and the container.
         # Simply add a `.magic` extension to the volume path in the container.
-        - ./src:/src.magic
+        # the :cached is optional, but we hope it improves inotify events.
+        - ./src:/src.magic:cached
         # this is needed for automatic discovery of mounted volumes in this container.
         - /var/run/docker.sock:/tmp/docker.sock:ro
         # If you want to configure USER / UID / IGNORE by volumes, you can use a simple YAML configuration file
@@ -89,6 +94,15 @@ The `magic-sync` container maps the local folder `./src` to the folder `/src.mag
         # Privilegied mode is needed if you want to increase the maximum inotify watches for very large synced folders
         # by setting the ENV var MAXIMUM_INOTIFY_WATCHES.
         #privileged: true
+        
+### Start / stop sync process
+
+To prevent crash of inotify events, you can stop the container before running an heavy files generation process (for example: a composer install commande).
+
+```
+docker exec -it project_magic-sync-1 bash -c 'supervisorctl stop unison--src'
+docker exec -it project_magic-sync-1 bash -c 'supervisorctl start unison--src'
+```
 
 ## Folders to sync
 
