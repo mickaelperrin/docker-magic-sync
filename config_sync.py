@@ -77,7 +77,7 @@ class Config:
         if user != 'root':
             os.system("chown " + args + user + " " + folder)
 
-    def generate_ignore_string(self, ignores, sync_method='unison'):
+    def generate_ignore_string(self, ignores, sync_method='unison', ignore_type='name'):
         """
         Generates an ignore string depending on the type of sync command, currently supports:
         - unison
@@ -86,7 +86,10 @@ class Config:
         if type(ignores) is str:
             ignores = ignores.split(':')
         if sync_method == 'unison':
-            separator = "' -ignore 'Path "
+            if ignore_type == 'path':
+                separator = "' -ignore 'Path "
+            else:
+                separator = "' -ignore 'Name "
             return separator[1:] + separator.join(ignores) + "' "
         elif sync_method == 'tar':
             separator = " --exclude "
@@ -106,6 +109,7 @@ class Config:
             for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
                 self.config['volumes'][volume]['volume'] = volume
                 self.config['volumes'][volume]['name'] = re.sub(r'\/', '-', volume)
+
                 if 'user' in conf:
                     user = conf['user']
                     self.config['volumes'][volume]['homedir'] = '/home/' + conf['user']
@@ -116,20 +120,30 @@ class Config:
                 else:
                     user = self.config['volumes'][volume]['user'] = self.config['volumes'][volume]['name'][1:8]
                     self.config['volumes'][volume]['homedir'] = '/home/' + self.config['volumes'][volume]['name'][1:8]
+
                 if 'uid' in conf:
                     self.config['volumes'][volume]['uid'] = uid = conf['uid']
                 elif 'SYNC_UID' in os.environ:
                     self.config['volumes'][volume]['uid'] = uid = os.environ['SYNC_UID']
                 else:
                   raise Exception('Unable to grab uid from config file or env variable. Ensure you have set SYNC_UID ! ')
-                if 'ignore' in conf:
-                    self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(conf['ignore'], 'unison')
-                elif 'SYNC_IGNORE' in os.environ:
-                    self.config['volumes'][volume]['ignore'] = os.environ['SYNC_IGNORE']
-                    self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(os.environ['SYNC_IGNORE'], 'unison')
+
+                self.config['volumes'][volume]['unison_ignore'] = ''
+                if 'ignore_name' in conf:
+                    self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(conf['ignore_name'], 'unison')
+                elif 'SYNC_IGNORE_NAMES' in os.environ:
+                    self.config['volumes'][volume]['ignore_name'] = os.environ['SYNC_IGNORE_NAMES']
+                    self.config['volumes'][volume]['unison_ignore'] = self.generate_ignore_string(os.environ['SYNC_IGNORE_NAMES'], 'unison')
                 else:
-                    self.config['volumes'][volume]['ignore'] = ''
-                    self.config['volumes'][volume]['unison_ignore'] = ''
+                    self.config['volumes'][volume]['ignore_name'] = ''
+                if 'ignore_path' in conf:
+                    self.config['volumes'][volume]['unison_ignore'] += self.generate_ignore_string(conf['ignore_path'], 'unison', 'path')
+                elif 'SYNC_IGNORE_PATHS' in os.environ:
+                    self.config['volumes'][volume]['ignore_path'] = os.environ['SYNC_IGNORE_PATHS']
+                    self.config['volumes'][volume]['unison_ignore'] += self.generate_ignore_string(os.environ['SYNC_IGNORE_PATHS'], 'unison', 'path')
+                else:
+                    self.config['volumes'][volume]['ignore_path'] = ''
+
                 if 'unison_defaults' not in conf and 'SYNC_UNISON_DEFAULTS' in os.environ:
                     self.config['volumes'][volume]['unison_defaults'] = os.environ['SYNC_UNISON_DEFAULTS']
                 elif 'unison_defaults' not in conf:
@@ -154,7 +168,7 @@ class Config:
         """
         if 'volumes' in self.config:
             for volume, conf in self.config['volumes'].iteritems():
-                command = 'unison ' + volume + '.magic ' + volume + ' -numericids -auto -batch ' + self.generate_ignore_string(conf['ignore'], 'unison')
+                command = 'unison ' + volume + '.magic ' + volume + ' -numericids -auto -batch ' + self.generate_ignore_string(conf['ignore_name'], 'unison') + self.generate_ignore_string(conf['ignore_path'], 'unison', 'path')
                 self.debug(command)
                 os.system(command)
                 self.set_permissions(conf['user'], volume, True)
@@ -172,4 +186,5 @@ class Config:
 
 c = Config()
 c.set(sys.argv[1])
+
 

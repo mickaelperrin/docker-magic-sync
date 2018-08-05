@@ -7,7 +7,8 @@ services:
     environment:
 #    - SYNC_USER=www-data
     - SYNC_UID=33
-    - SYNC_IGNORE=.idea:.git
+    - SYNC_IGNORE_NAMES=.idea:.git
+    #- SYNC_IGNORE_PATHS=
     #- MAXIMUM_INOTIFY_WATCHES=524288
     volumes:
     # Configure here the mappings between your host and the container.
