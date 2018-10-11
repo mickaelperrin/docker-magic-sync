@@ -1,28 +1,6 @@
 Magic sync for docker
 =====================
 
-> UPDATE: 2018-08-05
-> The test case seems to be a crash test. Sync performs well but crashes under heavy file generation. Currently, I have hooked composer related commands to stop / start the 
-> unison process in the container.
-> UPDATE: 2018-06-14
-> Did some new tests by reverting D4M to version 17.09.1-ce-mac42 which is given to have the best inotify support.
-> Sync from container to host works. 
-> But still no files synced from host to container. 
-
-> WARNING
-> This is currently a proof of concept.
-> An issue with OSXFS prevents `inotify events` to get triggered in a mounted volume if the number of files is high. This prevents this to run as soon as the number of files to synced exceed a rather very low limit.
-> While waiting that Docker fixes the issue with OSXFS, you could check [`docker-sync`](https://github.com/EugenMayer/docker-sync) where this concept has been succesfully deployed.
-
-## How to see the inotify bug
-
-1. Run `docker exec -it magicsync_magic-sync_1 bash -c 'inotifywatch /src.magic/example/src/.gitignore'`
-2. Edit on the host the .gitignore file in example/src
-3. Kill the inotifywatch process. You got "No events occured"
-4. Run `docker exec -it magicsync_magic-sync_1 bash -c 'inotifywatch /src.magic/example/src/.gitignore'`
-5. Run `docker exec -it magicsync_magic-sync_1 bash -c 'echo "##test" >> /src.magic/example/src/.gitignore'`
-6. Kill the inotifywatch process. You got "9      2       1       1            2              3     /src.magic/example/src/.gitignore"
-
 ## Description
 
 Magic sync for docker is a simple tool that watches local directory trees and syncs in real time the modification in a
@@ -140,6 +118,18 @@ This container uses:
 ### Special thanks
 
 Special thanks for [Eugen Mayer](https://github.com/EugenMayer) which makes me think about this implementation with OSXFS.
+
+## WARNING
+An issue with OSXFS prevents `inotify events` to get triggered in a mounted volume if the number of files created is high. This occurs when you perform a project initialisation like a `composer install` on a fresh project. Be sure, to stop the sync process before doing so, then re-eanble it to grab the generated files.  
+
+### How to see the inotify bug
+
+1. Run `docker exec -it magicsync_magic-sync_1 bash -c 'inotifywatch /src.magic/example/src/.gitignore'`
+2. Edit on the host the .gitignore file in example/src
+3. Kill the inotifywatch process. You got "No events occured"
+4. Run `docker exec -it magicsync_magic-sync_1 bash -c 'inotifywatch /src.magic/example/src/.gitignore'`
+5. Run `docker exec -it magicsync_magic-sync_1 bash -c 'echo "##test" >> /src.magic/example/src/.gitignore'`
+6. Kill the inotifywatch process. You got "9      2       1       1            2              3     /src.magic/example/src/.gitignore"
 
 ## Disclaimer
 
