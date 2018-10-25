@@ -14,7 +14,7 @@ class Config:
     config = {'volumes': {}}
     supervisor_conf_folder = '/etc/supervisor.conf.d/'
     unison_template_path = '/etc/supervisor.unison.tpl.conf'
-    unison_defaults = '-auto -numericids -batch -maxerrors 10 -repeat watch'
+    unison_defaults = ' -copyonconflict -auto -numericids -batch -maxerrors 10 -repeat watch'
 
     def read_yaml(self, config_file):
         """
@@ -147,7 +147,7 @@ class Config:
                 if 'unison_defaults' not in conf and 'SYNC_UNISON_DEFAULTS' in os.environ:
                     self.config['volumes'][volume]['unison_defaults'] = os.environ['SYNC_UNISON_DEFAULTS']
                 elif 'unison_defaults' not in conf:
-                    self.config['volumes'][volume]['unison_defaults'] = self.unison_defaults
+                    self.config['volumes'][volume]['unison_defaults'] = '-prefer ' + volume + '.magic ' + self.unison_defaults
                 self.create_user(user, uid)
                 self.set_permissions(user, volume)
 
@@ -168,7 +168,7 @@ class Config:
         """
         if 'volumes' in self.config:
             for volume, conf in self.config['volumes'].iteritems():
-                command = 'unison ' + volume + '.magic ' + volume + ' -numericids -auto -batch ' + self.generate_ignore_string(conf['ignore_name'], 'unison') + self.generate_ignore_string(conf['ignore_path'], 'unison', 'path')
+                command = 'unison ' + volume + '.magic ' + volume + ' -prefer ' + volume + '.magic -copyonconflict -numericids -auto -batch ' + self.generate_ignore_string(conf['ignore_name'], 'unison') + self.generate_ignore_string(conf['ignore_path'], 'unison', 'path')
                 self.debug(command)
                 os.system(command)
                 self.set_permissions(conf['user'], volume, True)
