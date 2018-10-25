@@ -56,5 +56,7 @@ COPY supervisor.unison.tpl.conf /etc/supervisor.unison.tpl.conf
 ENV TZ="Europe/Paris" \
     LANG="C.UTF-8"
 
+ADD VERSION .
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord"]
