@@ -151,6 +151,13 @@ class Config:
                 self.create_user(user, uid)
                 self.set_permissions(user, volume)
 
+            # In case of multiple users with the same uid, they may be renamed
+            # Ensure that we use the adequate name in configuration
+            for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
+                for existing_user in pwd.getpwall():
+                    if existing_user[2] == int(conf['uid']):
+                        conf['user'] = existing_user[0]
+
     def merge_discovered_volumes(self):
         """ 
         Read config file auto generated on container start by docker-gen.
