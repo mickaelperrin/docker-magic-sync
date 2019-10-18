@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine
 MAINTAINER Mickaël Perrin <dev@mickaelperrin.fr>
 
 # Add edge repos
@@ -21,7 +21,7 @@ ARG UNISON_VERSION=2.51.2
 # Compile unison from source with inotify support and removes compilation tools
 RUN apk add --no-cache --virtual .build-dependencies build-base curl \
  && apk add --no-cache inotify-tools \
- && apk add --no-cache ocaml@edge \
+ && apk add --no-cache ocaml \
  && curl -L https://github.com/bcpierce00/unison/archive/v$UNISON_VERSION.tar.gz | tar zxv -C /tmp \
  && cd /tmp/unison-${UNISON_VERSION} \
  && sed -i -e 's/GLIBC_SUPPORT_INOTIFY 0/GLIBC_SUPPORT_INOTIFY 1/' src/fsmonitor/linux/inotify_stubs.c \
