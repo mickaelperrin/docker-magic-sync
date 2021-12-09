@@ -30,7 +30,7 @@ RUN apk add --no-cache --virtual .build-dependencies build-base curl \
  && apk del .build-dependencies ocaml \
  && rm -rf /tmp/unison-${UNISON_VERSION}
 
-ENV DOCKERGEN_VERSION=0.7.4
+ENV DOCKERGEN_VERSION=0.8.0
 
 # Install docker-gen (to grab docker config on start)
 RUN apk add --no-cache curl \
