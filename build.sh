@@ -1,14 +1,54 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 IMAGE=docker-magic-sync
+UNISON_VERSION=2.51.4
+PUSH=${PUSH:-true}
+RELEASE=${RELEASE:-false}
+RELEASE_LATEST=${RELEASE_LATEST:-false}
 
 build () {
-	echo "${DIR}"
-	cd "${DIR}"
-	docker build -t ${MY_DOCKER_HUB}/${IMAGE}:latest .
+	docker build -t ${MY_DOCKER_HUB}/${IMAGE}:latest ${DIR}
 }
+
+local() {
+  REGISTRY=registry.gitlab.com/dkod-docker
+  REV_TAG=$(git log -1 --pretty=format:%h)
+  FQIN_RELEASE="${REGISTRY}/${IMAGE}:${UNISON_VERSION}"
+  FQIN="${FQIN_RELEASE}-${REV_TAG}"
+
+  docker --context default build \
+    -t ${FQIN}-arm64 \
+    --build-arg UNISON_VERSION=${UNISON_VERSION} \
+    ${DIR}
+
+  docker --context nuc build \
+    -t ${FQIN}-amd64 \
+    --build-arg UNISON_VERSION=${UNISON_VERSION} \
+    ${DIR}
+
+  docker manifest create ${FQIN} --amend ${FQIN}-amd64 --amend ${FQIN}-arm64
+
+  if $PUSH; then
+    docker --context default push ${FQIN}-arm64 || true
+    docker --context nuc push ${FQIN}-amd64 || true
+    docker manifest push ${FQIN} || true
+  fi
+
+  if $RELEASE; then
+    docker manifest create ${FQIN_RELEASE} --amend ${FQIN}-amd64 --amend ${FQIN}-arm64
+    docker manifest create ${FQIN_RELEASE} --amend ${FQIN}-amd64 --amend ${FQIN}-arm64
+    docker manifest push ${FQIN_RELEASE}
+  fi
+
+  if $RELEASE_LATEST; then
+    docker manifest create ${REGISTRY}/${IMAGE}:latest --amend ${FQIN}-amd64 --amend ${FQIN}-arm64
+    docker manifest create ${REGISTRY}/${IMAGE}:latest --amend ${FQIN}-amd64 --amend ${FQIN}-arm64
+    docker manifest push ${REGISTRY}/${IMAGE}:latest
+  fi
+}
+
 
 is_clean() {
 
