@@ -10,7 +10,7 @@ ARG PYYAML_VERSION=3.12
 
 RUN apk update \
  && apk add --no-cache --upgrade apk-tools@edgetesting \
- && apk add --no-cache shadow@edgetesting supervisor bash curl \
+ && apk add --no-cache shadow@edgetesting supervisor bash curl python2 \
  && curl -L http://pyyaml.org/download/pyyaml/PyYAML-${PYYAML_VERSION}.tar.gz | tar zxv -C /tmp \
  && cd /tmp/PyYAML-${PYYAML_VERSION} \
  && python setup.py --without-libyaml install \
