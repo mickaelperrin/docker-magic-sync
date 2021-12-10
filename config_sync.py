@@ -22,7 +22,7 @@ class Config:
         """
         with open(config_file, 'r') as stream:
             try:
-                return yaml.load(stream)
+                return yaml.load(stream, Loader=yaml.FullLoader)
             except yaml.YAMLError as exc:
                 print(exc)
 
@@ -31,7 +31,7 @@ class Config:
         Generates supervisor configuration for unison
         """
         if 'volumes' in self.config:
-            for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
+            for i, (volume, conf) in enumerate(self.config['volumes'].items(), 1):
                 conf.update({'port': 5000 + int(i)})
                 template = open(self.unison_template_path)
                 with open(self.supervisor_conf_folder + 'unison' + conf['name'] + '.conf', 'w') as f:
@@ -106,7 +106,7 @@ class Config:
         :return: 
         """
         if 'volumes' in self.config:
-            for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
+            for i, (volume, conf) in enumerate(self.config['volumes'].items(), 1):
                 self.config['volumes'][volume]['volume'] = volume
                 self.config['volumes'][volume]['name'] = re.sub(r'\/', '-', volume)
 
@@ -153,7 +153,7 @@ class Config:
 
             # In case of multiple users with the same uid, they may be renamed
             # Ensure that we use the adequate name in configuration
-            for i, (volume, conf) in enumerate(self.config['volumes'].iteritems(), 1):
+            for i, (volume, conf) in enumerate(self.config['volumes'].items(), 1):
                 for existing_user in pwd.getpwall():
                     if existing_user[2] == int(conf['uid']):
                         conf['user'] = existing_user[0]
@@ -174,7 +174,7 @@ class Config:
         When starting the container, copies the files from host to container
         """
         if 'volumes' in self.config:
-            for volume, conf in self.config['volumes'].iteritems():
+            for volume, conf in self.config['volumes'].items():
                 command = 'unison ' + volume + '.magic ' + volume + ' -prefer ' + volume + '.magic -copyonconflict -numericids -auto -batch ' + self.generate_ignore_string(conf['ignore_name'], 'unison') + self.generate_ignore_string(conf['ignore_path'], 'unison', 'path')
                 self.debug(command)
                 os.system(command)
@@ -189,7 +189,7 @@ class Config:
         self.merge_discovered_volumes()
         self.set_defaults()
         self.write_supervisor_conf()
-        self.initial_sync()
+        #self.initial_sync()
 
 c = Config()
 c.set(sys.argv[1])

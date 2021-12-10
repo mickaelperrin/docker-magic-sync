@@ -6,14 +6,14 @@ RUN echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repo
     echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
     echo "@edgetesting http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
-ARG PYYAML_VERSION=3.12
+ARG PYYAML_VERSION=5.3.1
 
 RUN apk update \
  && apk add --no-cache --upgrade apk-tools@edgetesting \
- && apk add --no-cache shadow@edgetesting supervisor bash curl python2 \
+ && apk add --no-cache shadow@edgetesting supervisor bash curl python3 \
  && curl -L http://pyyaml.org/download/pyyaml/PyYAML-${PYYAML_VERSION}.tar.gz | tar zxv -C /tmp \
  && cd /tmp/PyYAML-${PYYAML_VERSION} \
- && python setup.py --without-libyaml install \
+ && python3 setup.py --without-libyaml install \
  && apk del curl
 
 ARG UNISON_VERSION=2.51.2
@@ -38,9 +38,9 @@ RUN apk add --no-cache curl \
  && apk del curl
 
 # Install supervisord-stdout
-RUN apk add --no-cache py-pip \
- && pip install supervisor-stdout \
- && apk del py-pip
+RUN apk add --no-cache py-pip git \
+ && pip install git+https://github.com/coderanger/supervisor-stdout \
+ && apk del py-pip gitch
 
 # Install entrypoint script
 COPY entrypoint.sh /entrypoint.sh

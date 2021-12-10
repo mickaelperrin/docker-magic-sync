@@ -12,7 +12,7 @@ if [ "$1" == 'supervisord' ]; then
     docker-gen -endpoint unix:///tmp/docker.sock /volumes.tmpl > /volumes.yml
 
     # Generate the sync configuration
-    python -u /config_sync.py "$SYNC_CONFIG_FILE"
+    python3 -u /config_sync.py "$SYNC_CONFIG_FILE"
 
     # Check if a SH script is available in /sync-entrypoint.d and source it
     # check if a YML configuration file is available in /sync-entrypoint.d and load it
