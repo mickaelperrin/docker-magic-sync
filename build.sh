@@ -28,11 +28,10 @@ local() {
     --build-arg UNISON_VERSION=${UNISON_VERSION} \
     ${DIR}
 
-  docker manifest create ${FQIN} --amend ${FQIN}-amd64 --amend ${FQIN}-arm64
-
   if $PUSH; then
     docker --context default push ${FQIN}-arm64 || true
     docker --context nuc push ${FQIN}-amd64 || true
+    docker manifest create ${FQIN} --amend ${FQIN}-amd64 --amend ${FQIN}-arm64
     docker manifest push ${FQIN} || true
   fi
 
