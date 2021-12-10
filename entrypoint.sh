@@ -23,6 +23,8 @@ if [ "$1" == 'supervisord' ]; then
             *) echo "$0: ignoring $f" ;;
         esac
     done
+
+    supervisord -c /etc/supervisord.conf
 fi
 
 exec "$@"
