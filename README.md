@@ -1,6 +1,8 @@
 Magic sync for docker
 =====================
 
+### Note: Je n'utilise plus ce projet et lui ait préféré l'excellent Mutagen https://mutagen.io et mutagen-compose notamment
+
 ## Description
 
 Magic sync for docker is a simple tool that watches local directory trees and syncs in real time the modification in a
