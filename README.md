@@ -1,7 +1,7 @@
 Magic sync for docker
 =====================
 
-### Note: Je n'utilise plus ce projet et lui ait préféré l'excellent Mutagen https://mutagen.io et mutagen-compose notamment
+### Note: I don't use anymore this project and switched to Mutagen.
 
 ## Description
 
